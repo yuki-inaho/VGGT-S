@@ -171,8 +171,13 @@ class MaskDecoder(nn.Module):
                                    src_dense_embeddings_img_b,
                                    tar_dense_embeddings_img_b)
 
-        # Extract mask token outputs
-        mask_tokens_out = hs[:, 0:self.num_mask_tokens, :]
+        # Extract mask token outputs.  The native default is one token.  The
+        # automatic semantic adapter may pass K learned class queries through
+        # ``mask_token_b``; in that case each query shares the native binary
+        # hypernetwork head, which keeps the native checkpoint intact and adds
+        # no replicated hypernetwork parameters.
+        num_query_tokens = output_tokens.size(1)
+        mask_tokens_out = hs[:, 0:num_query_tokens, :]
 
         # ================= feature reconstruction ==================
 
@@ -199,9 +204,10 @@ class MaskDecoder(nn.Module):
 
         hyper_in_list: List[torch.Tensor] = []
 
-        for i in range(self.num_mask_tokens):
+        for i in range(num_query_tokens):
 
-            hyper_in_list.append(self.output_hypernetworks_mlps[i](
+            head_idx = min(i, len(self.output_hypernetworks_mlps) - 1)
+            hyper_in_list.append(self.output_hypernetworks_mlps[head_idx](
                 mask_tokens_out[:, i, :]))
 
         hyper_in = torch.stack(hyper_in_list, dim=1)

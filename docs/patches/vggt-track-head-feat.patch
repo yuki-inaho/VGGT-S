@@ -1,0 +1,21 @@
+--- a/vggt/heads/track_head.py
++++ b/vggt/heads/track_head.py
+@@ -69,7 +69,7 @@
+ 
+         self.iters = iters
+ 
+-    def forward(self, aggregated_tokens_list, images, patch_start_idx, query_points=None, iters=None):
++    def forward(self, aggregated_tokens_list, images, patch_start_idx, query_points=None, iters=None, feat=False):
+         """
+         Forward pass of the TrackHead.
+ 
+@@ -94,6 +94,9 @@
+         # feature_maps has shape (B, S, C, H//2, W//2) due to down_ratio=2
+         feature_maps = self.feature_extractor(aggregated_tokens_list, images, patch_start_idx)
+ 
++        if feat:
++            return feature_maps
++
+         # Use default iterations if not specified
+         if iters is None:
+             iters = self.iters
