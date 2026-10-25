@@ -6,10 +6,38 @@ build-backend = "setuptools.build_meta"
 name = "corresp_github"
 version = "0.1.0"
 description = "corresp_github"
-requires-python = ">=3.8"
+requires-python = ">=3.10,<3.11"
+dependencies = [
+    "torch==2.8.0+cu128",
+    "torchvision==0.23.0+cu128",
+    "numpy==1.26.4",
+    "Pillow==11.3.0",
+    "einops==0.8.1",
+    "safetensors==0.5.3",
+    "huggingface-hub==0.34.4",
+    "tensorboard==2.20.0",
+    "matplotlib==3.10.5",
+    "scikit-learn==1.7.1",
+    "opencv-python-headless==4.11.0.86",
+    "pycocotools==2.0.10",
+]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cu128" }]
+torchvision = [{ index = "pytorch-cu128" }]
+
+[dependency-groups]
+dev = [
+    "pytest==9.1.1",
+]
