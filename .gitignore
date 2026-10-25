@@ -1,5 +1,6 @@
 # checkpoints
 official_ckpts/*.pth
+third_party/
 
 # generated dataset jsons
 data/*.json
@@ -9,3 +10,14 @@ assets/*.gif
 
 # pos embed
 pos_embed/*
+
+# local environments and private caches
+.venv/
+.uv-cache/
+*.log
+
+# build metadata
+*.egg-info/
+
+# python cache
+__pycache__/
